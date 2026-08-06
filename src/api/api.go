@@ -1,6 +1,9 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/arman-ala/Car_shop/api/routers"
+	"github.com/gin-gonic/gin"
+)
 
 func InitServer() {
 	r := gin.New()
@@ -9,11 +12,9 @@ func InitServer() {
 	// api version
 	v1 := r.Group("/api/v1/")
 	{
-		v1.GET("/health", func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"message": "healthy",
-			})
-		})
+		healthGroup := v1.Group("/health")
+
+		routers.HealthRouter(healthGroup)
 	}
 
 	r.Run(":9000")

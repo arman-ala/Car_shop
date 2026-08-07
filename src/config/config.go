@@ -1,7 +1,10 @@
 package config
 
 import (
+	"fmt"
 	"os"
+	"path/filepath"
+	"runtime"
 
 	"github.com/spf13/viper"
 )
@@ -53,8 +56,11 @@ func SetConfig() *Config {
 	if env == "" {
 		env = "development"
 	}
-	cfgPath := getConfigPath(os.Getenv("APP_ENV"))
-	v, err := LoadConfig(cfgPath, "yml")
+	cfgFile, err := getConfigFilePath(env)
+	if err != nil {
+		panic(err)
+	}
+	v, err := LoadConfig(cfgFile)
 	if err != nil {
 		panic(err)
 	}
@@ -73,11 +79,9 @@ func ParseConfig(v *viper.Viper) (*Config, error) {
 	return &cfg, nil
 }
 
-func LoadConfig(fileName string, fileType string) (*viper.Viper, error) {
+func LoadConfig(configFile string) (*viper.Viper, error) {
 	v := viper.New()
-	v.SetConfigName(fileName)
-	v.SetConfigType(fileType)
-	v.AddConfigPath(".")
+	v.SetConfigFile(configFile)
 	v.AutomaticEnv()
 
 	if err := v.ReadInConfig(); err != nil {
@@ -86,13 +90,38 @@ func LoadConfig(fileName string, fileType string) (*viper.Viper, error) {
 	return v, nil
 }
 
-func getConfigPath(env string) string {
+func getConfigFileName(env string) string {
 	switch env {
-	case "development":
-		return "config/config-development.yml"
 	case "docker":
-		return "config/config-docker.yml"
+		return "config-docker.yml"
 	default:
-		return "config/config-development.yml"
+		return "config-development.yml"
 	}
+}
+
+func getConfigFilePath(env string) (string, error) {
+	fileName := getConfigFileName(env)
+
+	var candidates []string
+
+	if wd, err := os.Getwd(); err == nil {
+		candidates = append(candidates,
+			filepath.Join(wd, "config", fileName),
+			filepath.Join(wd, "src", "config", fileName),
+			filepath.Join(wd, "..", "config", fileName),
+			filepath.Join(wd, "..", "src", "config", fileName),
+		)
+	}
+
+	if _, thisFile, _, ok := runtime.Caller(0); ok {
+		candidates = append(candidates, filepath.Join(filepath.Dir(thisFile), fileName))
+	}
+
+	for _, p := range candidates {
+		if _, err := os.Stat(p); err == nil {
+			return filepath.Abs(p)
+		}
+	}
+
+	return "", fmt.Errorf("config file %q not found; searched: %v", fileName, candidates)
 }

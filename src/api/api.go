@@ -23,6 +23,7 @@ func InitServer() {
 		return
 	}
 	validator.RegisterValidation("IR_phone_number", validations.IranianPhoneNumberValidator, true)
+	validator.RegisterValidation("password", validations.PasswordValidator, true)
 
 	r.Use(gin.Logger(), gin.Recovery())
 	// api group

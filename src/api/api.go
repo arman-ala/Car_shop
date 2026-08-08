@@ -2,15 +2,28 @@ package api
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/arman-ala/Car_shop/api/routers"
+	"github.com/arman-ala/Car_shop/api/validations"
 	"github.com/arman-ala/Car_shop/config"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 )
 
 func InitServer() {
 	cfg := config.SetConfig()
 	r := gin.New()
+
+	// register custom validators
+	validator, ok := binding.Validator.Engine().(*validator.Validate)
+	if !ok {
+		log.Printf("error happened while initializing validator: validator not found")
+		return
+	}
+	validator.RegisterValidation("IR_phone_number", validations.IranianPhoneNumberValidator, true)
+
 	r.Use(gin.Logger(), gin.Recovery())
 	// api group
 	api := r.Group("/api")

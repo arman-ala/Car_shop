@@ -5,16 +5,17 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"time"
 
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Server   ServerConfig
-	Logger   LoggerConfig
-	Cors     CorsConfig
-	Postgres PostgresConfig
-	Redis    RedisConfig
+	Server    ServerConfig
+	Logger    LoggerConfig
+	Cors      CorsConfig
+	Postgres  PostgresConfig
+	Redis     RedisConfig
 	Validator Validator
 }
 
@@ -47,9 +48,13 @@ type RedisConfig struct {
 	Port               string
 	Password           string
 	DB                 string
-	MinIdleConnections int
+	DialTimeout        time.Duration
+	ReadTimeout        time.Duration
+	WriteTimeout       time.Duration
 	PoolSize           int
-	PoolTimeout        int
+	PoolTimeout        time.Duration
+	IdleTimeout        time.Duration
+	IdleCheckFrequency time.Duration
 }
 
 type Validator struct {
@@ -57,13 +62,13 @@ type Validator struct {
 }
 
 type Password struct {
-	Min int
-	Max int
-	IncludeChars bool
+	Min           int
+	Max           int
+	IncludeChars  bool
 	IncludeDigits bool
-	IncludeUpper bool
-	IncludeLower bool
-	IncludeSpace bool
+	IncludeUpper  bool
+	IncludeLower  bool
+	IncludeSpace  bool
 }
 
 func SetConfig() *Config {

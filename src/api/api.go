@@ -14,7 +14,7 @@ import (
 )
 
 func InitServer() {
-	cfg := config.SetConfig()
+	cfg := config.ParseAndGetConfig()
 	r := gin.New()
 
 	// register custom validators

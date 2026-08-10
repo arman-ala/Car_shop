@@ -1,4 +1,7 @@
 *.exe
 *.sum
 
-/.trae
+.trae/
+
+.vscode/settings.json
+settings.json

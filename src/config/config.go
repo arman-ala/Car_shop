@@ -40,7 +40,10 @@ type PostgresConfig struct {
 	User     string
 	Password string
 	DBName   string
-	SSLMode  bool
+	SSLMode  string
+	MaxIdleConns int
+	MaxOpenConns int
+	MaxLifetime time.Duration
 }
 
 type RedisConfig struct {
@@ -71,7 +74,7 @@ type Password struct {
 	IncludeSpace  bool
 }
 
-func SetConfig() *Config {
+func ParseAndGetConfig() *Config {
 	env := os.Getenv("APP_ENV")
 	if env == "" {
 		env = "development"

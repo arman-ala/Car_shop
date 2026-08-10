@@ -14,7 +14,7 @@ func PasswordValidator(field validator.FieldLevel) (result bool) {
 		log.Printf("error happened while validating password: %v", value)
 		return
 	}
-
+	// TODO: the validation logic should be moved to common package
 	// Here we check if the password satisfies the regex
 	result, err := regexp.MatchString(`^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).{6,})\S$`, value)
 	if err != nil {

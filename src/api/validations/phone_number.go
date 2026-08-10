@@ -1,9 +1,7 @@
 package validations
 
 import (
-	"log"
-	"regexp"
-
+	"github.com/arman-ala/Car_shop/common"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -14,11 +12,5 @@ func IranianPhoneNumberValidator(field validator.FieldLevel) bool {
 		return false
 	}
 
-	result, err := regexp.MatchString("^09[0-9]{9}$|^98[0-9]{9}$|^\\+98[0-9]{9}$", value)
-	if err != nil {
-		log.Printf("error happened while validating phone number: \n%s\n", err)
-		return false
-	}
-	
-	return result
+	return common.IsPhoneNumberIranian(value)
 }

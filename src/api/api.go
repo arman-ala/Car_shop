@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/arman-ala/Car_shop/api/middlewares"
 	"github.com/arman-ala/Car_shop/api/routers"
 	"github.com/arman-ala/Car_shop/api/validations"
 	"github.com/arman-ala/Car_shop/config"
@@ -23,9 +24,10 @@ func InitServer() {
 		return
 	}
 	validator.RegisterValidation("IR_phone_number", validations.IranianPhoneNumberValidator, true)
+	// TODO: I should use config to validate password
 	validator.RegisterValidation("password", validations.PasswordValidator, true)
 
-	r.Use(gin.Logger(), gin.Recovery())
+	r.Use(gin.Logger(), gin.Recovery(), middlewares.LimitByRequestMiddleware())
 	// api group
 	api := r.Group("/api")
 	{

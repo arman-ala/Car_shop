@@ -22,4 +22,12 @@ redis:
   minIdleConnections: 100
   poolSize: 5000
   poolTimeout: 240
-  
+validator:
+  password:
+    min: 8
+    max: 64
+    includeChars: true
+    includeDigits: true
+    includeUpper: true
+    includeLower: true
+    includeSpace: false

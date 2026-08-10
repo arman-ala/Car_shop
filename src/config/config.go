@@ -15,6 +15,7 @@ type Config struct {
 	Cors     CorsConfig
 	Postgres PostgresConfig
 	Redis    RedisConfig
+	Validator Validator
 }
 
 type ServerConfig struct {
@@ -49,6 +50,20 @@ type RedisConfig struct {
 	MinIdleConnections int
 	PoolSize           int
 	PoolTimeout        int
+}
+
+type Validator struct {
+	Password Password
+}
+
+type Password struct {
+	Min int
+	Max int
+	IncludeChars bool
+	IncludeDigits bool
+	IncludeUpper bool
+	IncludeLower bool
+	IncludeSpace bool
 }
 
 func SetConfig() *Config {

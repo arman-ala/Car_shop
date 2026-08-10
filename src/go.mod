@@ -1,6 +1,6 @@
 module github.com/arman-ala/Car_shop
 
-go 1.26.5
+go 1.26
 
 require (
 	github.com/didip/tollbooth v4.0.2+incompatible
